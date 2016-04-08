@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JoliDéco</title>
+	<meta charset="UTF-8">
+</head>
+<body>
+
+<div class="picker-container">
+	<label for="color">Sélection de la couleur des murs:</label>
+	<input type="color" name="color" id="colorPicker" />
+</div>
+
+<canvas id="canvas" width="1200" height="2400"></canvas>
+
+<script>
+	// TODO Update url and load color from it
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
+	var imageURLs = [];
+	var imagesOK = 0;
+	var imgs = [];
+	imageURLs.push("http://local.dev/JoliDeco/reu1.png");
+	imageURLs.push("http://local.dev/JoliDeco/reu2.png");
+	loadAllImages();
+
+	function loadAllImages() {
+	    for (var i = 0; i < imageURLs.length; i++) {
+	        var img = new Image();
+	        imgs.push(img);
+	        img.onload = function () {
+	            imagesOK++;
+	            imagesAllLoaded();
+	        };
+	        img.src = imageURLs[i];
+	    }
+	}
+
+	var imagesAllLoaded = function () {
+	    if (imagesOK == imageURLs.length) {
+	        // all images are fully loaded an ready to use
+	        reu1 = imgs[0];
+	        reu2 = imgs[1];
+	        // Init
+	        update();
+	    }
+	};
+
+	function update(color) {
+	    // save the context state
+	    ctx.save();
+
+	    ctx.fillStyle = color;
+	    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // draw images
+	    ctx.drawImage(reu1,0,0, reu1.width, reu1.height);
+	    ctx.drawImage(reu2,0,reu1.height, reu2.width, reu2.height);
+
+	    ctx.restore();
+	}
+
+	// color picker
+	var input = document.getElementById("colorPicker");
+	input.addEventListener('change', function(event) {
+		update(event.target.value);
+	});
+</script>
+
+<style type="text/css">
+    body {
+    	margin: 0;
+    	background-color: #EEE;
+    }
+
+    .picker-container {
+    	padding: 10px;
+    	background-color: red;
+ 		position:fixed; 
+ 		top: 0;
+ 		right: 0;
+ 		background-color: #FFF;
+    }
+
+    label {
+    	display: block;
+    	margin-bottom: 5px;
+    }
+
+	#canvas {
+		display: block;
+		margin: 0 auto 0 auto;
+	}
+</style>
+
+</body>
+</html>
